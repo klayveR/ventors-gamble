@@ -410,11 +410,11 @@ $(function () {
             targetHandle.text(ui.value + "%");
 
             if (!modMode) {
-                if (ui.value >= 92) {
+                if (ui.value >= 93) {
                     $("#autoRollInfo").html("At " + ui.value + "% fast auto-roll is <strong>not recommended</strong>, it is very likely this tab will freeze for a long time.").show();
-                } else if (ui.value >= 91) {
+                } else if (ui.value >= 90) {
                     $("#autoRollInfo").html("At " + ui.value + "% fast auto-roll can cause massive lag.").show();
-                } else if (ui.value >= 83) {
+                } else if (ui.value >= 86) {
                     $("#autoRollInfo").html("At " + ui.value + "% fast auto-roll can cause lag.").show();
                 } else {
                     $("#autoRollInfo").html("").hide();
