@@ -1,0 +1,65 @@
+@font-face {
+    font-family: Fontin;
+    src: url(../font/fontin.otf);
+}
+
+#targetPercentage, #speedValue, #lifeRollValue, #iiqRollValue, #iirRollValue, #fireRollValue, #coldRollValue, #lightRollValue {
+	width: 3.5em;
+	height: 1.6em;
+	top: 50%;
+	margin-top: -.8em;
+	text-align: center;
+	line-height: 1.6em;
+}
+
+.unique {
+	color: rgb(175, 96, 37) !important;
+}
+
+.poeFont {
+    font-family: Fontin;
+    text-transform: uppercase;
+}
+
+.noMargin {
+	margin-bottom: 0rem !important;
+}
+
+.red {
+	color: #ED6B6B !important;
+}
+
+.green {
+	color: #95C983 !important;
+}
+
+.grey {
+	color: #363636 !important;
+}
+
+.mod {
+	color: #7A7A7A;
+}
+
+.hidden {
+	display: none;
+}
+
+.small {
+	font-size: 11px;
+}
+
+.modModeSlider {
+	display: none;
+}
+
+.ventorImg {
+	float: right;
+  -webkit-transform: scale(0.5); /* Saf3.1+, Chrome */
+     -moz-transform: scale(0.5); /* FF3.5+ */
+      -ms-transform: scale(0.5); /* IE9 */
+       -o-transform: scale(0.5); /* Opera 10.5+ */
+          transform: scale(0.5);
+             /* IE6–IE9 */
+             filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.9999619230641713, M12=-0.008726535498373935, M21=0.008726535498373935, M22=0.9999619230641713,SizingMethod='auto expand');
+}

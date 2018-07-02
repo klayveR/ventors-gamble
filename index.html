@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Basic Page Needs
+    –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta charset="utf-8">
+    <title>Ventor's Gamble</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+    <link rel="stylesheet" href="css/misc.css">
+    <link rel="stylesheet" href="js/jquery.sweet-modal.min.css"/>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+</head>
+<body>
+<!-- .container is main centered wrapper -->
+<div class="container">
+
+    <!-- columns should be the immediate child of a .row -->
+    <div class="row" style="margin-top: 5%">
+        <div class="four columns">
+            <img src="images/ventors_gamble.png" class="ventorImg">
+            <h3 class="unique poeFont noMargin">Ventor's Gamble</h3>
+            <h5 class="unique poeFont noMargin">Gold Ring</h5>
+
+            <table class="u-full-width">
+                <tbody>
+                <tr>
+                    <td colspan="2" id="implicit" class="grey poeFont small">
+                        15% increased Rarity of Items found
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" id="mods">
+                        <p id="unid" class="red poeFont noMargin">Unidentified</p>
+                        <p class="hidden mod poeFont noMargin" id="mod_life"><span id="roll_life">0</span> to maximum
+                            Life</p>
+                        <p class="hidden mod poeFont noMargin" id="mod_iiq"><span id="roll_iiq">0</span>% increased
+                            Quantity
+                            of
+                            Items found</p>
+                        <p class="hidden mod poeFont noMargin" id="mod_iir"><span id="roll_iir">0</span>% increased
+                            Rarity of
+                            Items
+                            found</p>
+                        <p class="hidden mod poeFont noMargin" id="mod_fire"><span id="roll_fire">0</span>% to Fire
+                            Resistance
+                        </p>
+                        <p class="hidden mod poeFont noMargin" id="mod_cold"><span id="roll_cold">0</span>% to Cold
+                            Resistance
+                        </p>
+                        <p class="hidden mod poeFont noMargin" id="mod_light"><span id="roll_light">0</span>% to
+                            Lightning
+                            Resistance
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" id="flavor" class="unique poeFont small">
+                        In a blaze of glory,<br/>
+                        An anomaly defying all odds<br/>
+                        The "unkillable" beast met the divine<br/>
+                        And Ventor met his latest trophy.<br/>
+                    </td>
+                </tr>
+                <tr>
+                    <th width="50%" class="small">Maxed %</th>
+                    <td width="50%" class="small grey"><span id="maxed"></span>%</td>
+                </tr>
+                <tr>
+                    <th width="50%" class="small">Divines used</th>
+                    <td width="50%" class="small grey"><span id="divinesUsed"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="four columns">
+            <h3>Statistics</h3>
+            <table id="statistics" class="u-full-width">
+                <thead>
+                <tr>
+                    <th class='small'>< 10%</th>
+                    <th class='small'>< 25%</th>
+                    <th class='small'>< 50%</th>
+                    <th class='small'>> 50%</th>
+                    <th class='small'>> 75%</th>
+                    <th class='small'>> 90%</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td id="statistics0" class='small grey'>0%</td>
+                    <td id="statistics1" class='small grey'>0%</td>
+                    <td id="statistics2" class='small grey'>0%</td>
+                    <td id="statistics3" class='small grey'>0%</td>
+                    <td id="statistics4" class='small grey'>0%</td>
+                    <td id="statistics5" class='small grey'>0%</td>
+                </tr>
+                </tbody>
+            </table>
+            <h3>Best rolls history</h3>
+            <table id="history" class="u-full-width">
+                <thead>
+                <tr>
+                    <th class='small'>%</th>
+                    <th class='small'>Life</th>
+                    <th class='small'>IIQ</th>
+                    <th class='small'>IIR</th>
+                    <th class='small'>Fire</th>
+                    <th class='small'>Cold</th>
+                    <th class='small'>Light</th>
+                    <th class='small'>#</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="four columns">
+            <button id="colorButton" onclick="toggleColors()" style="float:right">Disable colors</button>
+            <button class="button-primary" id="rollButton" onclick="roll()">Roll</button>
+            <button class="hidden" id="resetButton" onclick="resetVentors()">Reset</button>
+
+            <table class="u-full-width">
+                <tbody>
+                <tr>
+                    <th width="40%">
+                        Auto-Roll Speed
+                    </th>
+                    <td width="60%">
+                        <div id="speedSlider">
+                            <div id="speedValue" class="ui-slider-handle"></div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <button id="startAutoRollButton" onclick="rollAuto()">Start Auto-Roll</button>
+            <button id="startAutoRollFastButton" onclick="rollAutoFast()">Fast Auto-Roll</button>
+            <button id="stopAutoRollButton" class="hidden" onclick="stopAutoRoll()">Stop Auto-Roll</button>
+
+            <table class="u-full-width">
+                <tbody>
+                <tr class="normalModeSlider">
+                    <th width="40%">
+                        Target %
+                    </th>
+                    <td width="60%">
+                        <div id="targetSlider">
+                            <div id="targetPercentage" class="ui-slider-handle"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="modModeSlider">
+                    <th width="40%">
+                        Life
+                    </th>
+                    <td width="60%">
+                        <div id="lifeRollSlider">
+                            <div id="lifeRollValue" class="ui-slider-handle"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="modModeSlider">
+                    <th width="40%">
+                        IIQ
+                    </th>
+                    <td width="60%">
+                        <div id="iiqRollSlider">
+                            <div id="iiqRollValue" class="ui-slider-handle"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="modModeSlider">
+                    <th width="40%">
+                        IIR
+                    </th>
+                    <td width="60%">
+                        <div id="iirRollSlider">
+                            <div id="iirRollValue" class="ui-slider-handle"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="modModeSlider">
+                    <th width="40%">
+                        Fire
+                    </th>
+                    <td width="60%">
+                        <div id="fireRollSlider">
+                            <div id="fireRollValue" class="ui-slider-handle"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="modModeSlider">
+                    <th width="40%">
+                        Cold
+                    </th>
+                    <td width="60%">
+                        <div id="coldRollSlider">
+                            <div id="coldRollValue" class="ui-slider-handle"></div>
+                        </div>
+                    </td>
+                </tr>
+                <tr class="modModeSlider">
+                    <th width="40%">
+                        Light
+                    </th>
+                    <td width="60%">
+                        <div id="lightRollSlider">
+                            <div id="lightRollValue" class="ui-slider-handle"></div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p id="autoRollInfo" class="hidden small grey"></p>
+
+            <p id="modeInfo" class="small grey">Select how maxed out the combined rolls should be. Once met, the
+                auto-roll will automatically stop. Click below to select the minimum rolls of mods individually.</p>
+
+            <button class="button-primary" id="modeButton" onclick="toggleMode()">Switch to individual mod mode</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="js/jquery.sweet-modal.min.js"></script>
+<script type="text/javascript" src="js/color.js"></script>
+<script type="text/javascript" src="js/ventor.js"></script>
+</body>
+</html>
