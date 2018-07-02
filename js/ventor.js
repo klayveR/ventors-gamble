@@ -6,6 +6,8 @@ var historyEntries = 10;
 var timeout;
 var colors = true;
 var modMode = false;
+var historyEnabled = true;
+var warningModal;
 
 var statistics = [0, 0, 0, 0, 0, 0];
 var rollHistory = []
@@ -23,11 +25,11 @@ var ranges = [
 ];
 
 // Roll the item and display the stats
-function roll(increaseDivineCount = true) {
+function roll(increaseDivineCount = true, ui = true, updateHistory = true) {
     if (increaseDivineCount) divinesUsed++;
 
     // Copy previous rolls
-    previousRolls = rolls.slice(0);
+    var previousRolls = rolls.slice(0);
 
     // This loop is to prevent the same outcome from a divine. A divine has to change at least on modifier value
     while (rolls.equals(previousRolls)) {
@@ -45,8 +47,6 @@ function roll(increaseDivineCount = true) {
     if(maxed >= 75) statistics[1]++;
     if(maxed >= 90) statistics[0]++;
 
-    addHistory();
-
     if(auto) {
         if((modMode && (rolls[0] >= $("#lifeRollSlider").slider("value") &&
                 rolls[1] >= $("#iiqRollSlider").slider("value") &&
@@ -59,14 +59,13 @@ function roll(increaseDivineCount = true) {
         }
     }
 
-    if (!autoFast) {
-        updateUI();
-    }
+    if(updateHistory) addHistory();
+    if(ui) updateUI();
 }
 
 function addHistory() {
-    stats = [maxed, divinesUsed, rolls.slice(0), rollPercentages.slice(0)];
-    added = false;
+    var stats = [maxed, divinesUsed, rolls.slice(0), rollPercentages.slice(0)];
+    var added = false;
 
     // If history is empty, add stats as first history entry
     if (rollHistory.length === 0) {
@@ -114,17 +113,24 @@ function stopAutoRoll() {
 
 // Got the desired outcome by auto rolling
 function gotRoll() {
+    var timeout = 0;
+    if(warningModal !== undefined) {
+        warningModal.close();
+        timeout = 250;
+    }
     stopAutoRoll();
     updateUI();
     updateHistory();
 
-    $.sweetModal({
-        icon: $.sweetModal.ICON_SUCCESS,
-        timeout: 1200,
-        theme: $.sweetModal.THEME_DARK,
-        width: "300px",
-        showCloseButton: false
-    });
+    setTimeout(function() {
+        $.sweetModal({
+            icon: $.sweetModal.ICON_SUCCESS,
+            timeout: 1200,
+            theme: $.sweetModal.THEME_DARK,
+            width: "300px",
+            showCloseButton: false
+        });
+    }, timeout);
 }
 
 // Start the automatic rolling function with a delay after each roll + show stats + disable buttons/sliders
@@ -139,7 +145,7 @@ function rollAuto() {
     $("#speedSlider").slider("disable");
 
     auto = true;
-    timeout = setInterval(roll, $("#speedSlider").slider("value"));
+    timeout = setInterval(function() {roll(true, true, historyEnabled)}, $("#speedSlider").slider("value"));
 }
 
 // Start the automatic rolling function without displaying stats after each roll
@@ -147,16 +153,39 @@ function rollAutoFast() {
     auto = false;
     autoFast = true;
 
-    roll();
+    var content = "<p>Rolling...</p><p>High target percentages or mod mode can cause lag. You can't interact with this tab during fast auto-roll</p>";
+
+    if(historyEnabled) {
+        content = content + "<p>To make this process faster next time, consider disabling the history feature.</p>";
+    }
+
+    if($("#targetSlider").slider("value") >= 92 || modMode) {
+        warningModal = $.sweetModal({
+            title: 'This will take a while...',
+            content: content,
+            icon: $.sweetModal.ICON_WARNING,
+            theme: $.sweetModal.THEME_DARK,
+            width: "500px",
+            showCloseButton: false
+        });
+
+        setTimeout(startAutoFast, 250);
+    } else {
+        startAutoFast();
+    }
+}
+
+function startAutoFast() {
+    roll(true, false, historyEnabled);
 
     while (!(modMode && (rolls[0] >= $("#lifeRollSlider").slider("value") &&
-            rolls[1] >= $("#iiqRollSlider").slider("value") &&
-            rolls[2] >= $("#iirRollSlider").slider("value") &&
-            rolls[3] >= $("#fireRollSlider").slider("value") &&
-            rolls[4] >= $("#coldRollSlider").slider("value") &&
-            rolls[5] >= $("#lightRollSlider").slider("value"))) &&
-        !(!modMode && maxed >= $("#targetSlider").slider("value"))) {
-        roll();
+        rolls[1] >= $("#iiqRollSlider").slider("value") &&
+        rolls[2] >= $("#iirRollSlider").slider("value") &&
+        rolls[3] >= $("#fireRollSlider").slider("value") &&
+        rolls[4] >= $("#coldRollSlider").slider("value") &&
+        rolls[5] >= $("#lightRollSlider").slider("value"))) &&
+    !(!modMode && maxed >= $("#targetSlider").slider("value"))) {
+        roll(true, false, historyEnabled);
     }
 
     gotRoll();
@@ -253,6 +282,16 @@ function toggleColors() {
 
     updateUI();
     updateHistory();
+}
+
+function toggleHistory() {
+    historyEnabled = !historyEnabled;
+
+    if (historyEnabled) {
+        $("#historyButton").html("Disable history");
+    } else {
+        $("#historyButton").html("Enable history");
+    }
 }
 
 function toggleMode() {
@@ -371,12 +410,12 @@ $(function () {
             targetHandle.text(ui.value + "%");
 
             if (!modMode) {
-                if (ui.value >= 94) {
-                    $("#autoRollInfo").html("At " + ui.value + "% fast auto-roll is <strong>not recommended</strong>, it is very likely this tab will crash.").show();
+                if (ui.value >= 92) {
+                    $("#autoRollInfo").html("At " + ui.value + "% fast auto-roll is <strong>not recommended</strong>, it is very likely this tab will freeze for a long time.").show();
                 } else if (ui.value >= 91) {
-                    $("#autoRollInfo").html("At " + ui.value + "% fast auto-roll can cause massive lag and might crash this tab.").show();
+                    $("#autoRollInfo").html("At " + ui.value + "% fast auto-roll can cause massive lag.").show();
                 } else if (ui.value >= 83) {
-                    $("#autoRollInfo").html("High target values may cause lag when using fast auto-roll.").show();
+                    $("#autoRollInfo").html("At " + ui.value + "% fast auto-roll can cause lag.").show();
                 } else {
                     $("#autoRollInfo").html("").hide();
                 }

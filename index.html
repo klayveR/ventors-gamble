@@ -143,7 +143,7 @@
 
             <button id="startAutoRollButton" onclick="rollAuto()">Start Auto-Roll</button>
             <button id="startAutoRollFastButton" onclick="rollAutoFast()">Fast Auto-Roll</button>
-            <button id="stopAutoRollButton" class="hidden" onclick="stopAutoRoll()">Stop Auto-Roll</button>
+            <button id="stopAutoRollButton" class="hidden" onclick="stopAutoRoll()">Stop Auto-Roll</button><br />
 
             <table class="u-full-width">
                 <tbody>
@@ -226,6 +226,8 @@
                 auto-roll will automatically stop. Click below to select the minimum rolls of mods individually.</p>
 
             <button class="button-primary" id="modeButton" onclick="toggleMode()">Switch to individual mod mode</button>
+
+            <button id="historyButton" onclick="toggleHistory()">Disable history</button><p class="small grey">Disabling the history feature might increases performance during fast auto-roll</p>
         </div>
     </div>
 </div>
