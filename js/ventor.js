@@ -153,16 +153,10 @@ function rollAutoFast() {
     auto = false;
     autoFast = true;
 
-    var content = "<p>Rolling...</p><p>High target percentages or mod mode can cause lag. You can't interact with this tab during fast auto-roll</p>";
-
-    if(historyEnabled) {
-        content = content + "<p>To make this process faster next time, consider disabling the history feature.</p>";
-    }
-
     if($("#targetSlider").slider("value") >= 92 || modMode) {
         warningModal = $.sweetModal({
             title: 'This will take a while...',
-            content: content,
+            content: "<p>Rolling...</p><p>High target percentages or mod mode can cause lag. You can't interact with this tab during fast auto-roll</p>",
             icon: $.sweetModal.ICON_WARNING,
             theme: $.sweetModal.THEME_DARK,
             width: "500px",
@@ -411,7 +405,7 @@ $(function () {
 
             if (!modMode) {
                 if (ui.value >= 93) {
-                    $("#autoRollInfo").html("At " + ui.value + "% fast auto-roll is <strong>not recommended</strong>, it is very likely this tab will freeze for a long time.").show();
+                    $("#autoRollInfo").html("At " + ui.value + "% fast auto-roll is very likely to freeze this tab for a long time.").show();
                 } else if (ui.value >= 90) {
                     $("#autoRollInfo").html("At " + ui.value + "% fast auto-roll can cause massive lag.").show();
                 } else if (ui.value >= 86) {
